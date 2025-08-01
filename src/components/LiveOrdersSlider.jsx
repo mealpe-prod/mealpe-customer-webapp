@@ -95,25 +95,28 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
           pt: 0.5,
         }}
       >
-        {/* Slider */}
-        <Box sx={{ position: "relative" }}>
+        {/* Show active step of total step above, with space at bottom */}
+        <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 1.5 }}>
           <Typography
             variant="body2"
-            color="text.secondary"
+            color="#fff"
             sx={{
-              position: "absolute",
-              top: 0,
-              right: isMediumScreen ? 28 : 20,
-              zIndex: 1,
               fontSize: { xs: 11, sm: 12 },
               fontWeight: 500,
               px: 1,
               py: 0.2,
               borderRadius: 1,
+              backgroundColor: "#fff",
+              color: "#000000",
+              display: "inline-block",
+              boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
             }}
           >
             {`${activeStep + 1} of ${liveOrders.length}`}
           </Typography>
+        </Box>
+        {/* Slider */}
+        <Box sx={{ position: "relative" }}>
           <SwipeableViews
             axis="x"
             index={activeStep}
@@ -133,16 +136,16 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
                       p: { xs: 1.25, sm: 1.5 },
                       borderRadius: 3,
                       border: "1px solid",
-                      borderColor: "#EAEAEA",
+                      borderColor: "#FF583A",
                       cursor: "pointer",
                       transition: "all 0.2s",
                       "&:hover": {
                         boxShadow: 3,
-                        borderColor: "#FF583A",
+                        borderColor: "#fff",
                       },
                       maxWidth: { xs: "100%", sm: 450 },
                       mx: "auto",
-                      backgroundColor: "#fff",
+                      backgroundColor: "#FF583A",
                       position: "relative",
                     }}
                   >
@@ -157,7 +160,8 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
                             width: { xs: 36, sm: 40 },
                             height: { xs: 36, sm: 40 },
                             border: "1px solid",
-                            borderColor: "#EAEAEA",
+                            borderColor: "#fff",
+                            backgroundColor: "#fff",
                           }}
                           imgProps={{
                             onError: (e) => {
@@ -177,6 +181,7 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
                             sx={{
                               fontSize: { xs: 14, sm: 16 },
                               lineHeight: 1.2,
+                              color: "#fff",
                             }}
                           >
                             {order.outletname}
@@ -197,11 +202,19 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
                               sx={{
                                 fontSize: { xs: 10, sm: 11 },
                                 height: { xs: 20, sm: 24 },
-                                borderColor: "#FF9800",
-                                backgroundColor: "transparent",
+                                borderColor: "#FF583A",
+                                backgroundColor: "#fff",
                                 borderRadius: 6,
                                 fontWeight: 500,
                                 mr: 1,
+                                color: "#FF583A",
+                                // subtle shadow for professional look
+                                boxShadow: "0 1px 4px rgba(255,88,58,0.08)",
+                                letterSpacing: 0.2,
+                                "& .MuiChip-label": {
+                                  color: "#FF583A",
+                                  fontWeight: 500,
+                                },
                               }}
                             />
 
@@ -213,7 +226,7 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
                               <AccessTimeIcon
                                 sx={{
                                   fontSize: { xs: 14, sm: 15 },
-                                  color: "text.secondary",
+                                  color: "#fff",
                                 }}
                               />
                               <Typography
@@ -222,6 +235,7 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
                                 sx={{
                                   fontSize: { xs: 11, sm: 12 },
                                   lineHeight: 1.1,
+                                  color: "#fff",
                                 }}
                               >
                                 {formatDate(order.scheduledate)}{" "}
@@ -235,13 +249,13 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
                       {/* View Order Button */}
                       <Grid item>
                         <Button
-                          variant="outlined"
+                          variant="contained"
                           onClick={() => navigate(`/order/${order.orderid}`)}
                           sx={{
                             borderRadius: 50,
                             textTransform: "none",
-                            fontWeight: "medium",
-                            border: "1px solid #FF583A",
+                            fontWeight: "bold",
+                            border: "1px solid #fff",
                             color: "#FF583A",
                             px: { xs: 1.5, sm: 2 },
                             py: 0.5,
@@ -250,9 +264,13 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
                             height: "auto",
                             lineHeight: 1.5,
                             whiteSpace: "nowrap",
+                            backgroundColor: "#fff",
+                            boxShadow: "none",
                             "&:hover": {
-                              backgroundColor: "#FFF1EE",
+                              backgroundColor: "#fff",
+                              color: "#FF583A",
                               borderColor: "#FF583A",
+                              boxShadow: "0 2px 8px rgba(255,88,58,0.08)",
                             },
                           }}
                         >
@@ -266,7 +284,7 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
                     variant="rectangular"
                     width="100%"
                     height={80}
-                    sx={{ borderRadius: 3 }}
+                    sx={{ borderRadius: 3, backgroundColor: "#fff" }}
                   />
                 )}
               </Box>
