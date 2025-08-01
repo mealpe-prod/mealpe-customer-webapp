@@ -118,7 +118,7 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
               background: "#fff",
               color: "#FF583A",
               fontWeight: 700,
-              fontSize: 13,
+              fontSize: 10,
               px: 2,
               py: 0.5,
               borderTopLeftRadius: 12,
@@ -136,41 +136,7 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
             {`Orders ${activeStep + 1}/${liveOrders.length}`}
           </Box>
 
-          {/* Outlet logo in center */}
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flex: 1,
-              position: "relative",
-              minWidth: 0,
-            }}
-          >
-            <Avatar
-              src={liveOrders[activeStep].logo || mealpelogo}
-              alt={liveOrders[activeStep].outletname}
-              sx={{
-                width: 56,
-                height: 56,
-                border: "3px solid #fff",
-                backgroundColor: "#fff",
-                boxShadow: "0 2px 8px rgba(255,88,58,0.10)",
-                mx: "auto",
-                position: "absolute",
-                left: "30%",
-                top: "-32px",
-                transform: "translateX(-50%)",
-                zIndex: 3,
-              }}
-              imgProps={{
-                onError: (e) => {
-                  e.target.src = mealpelogo;
-                },
-              }}
-            />
-          </Box>
-
+    
           {/* Left: Outlet name and status */}
           <Box
             sx={{
@@ -278,7 +244,7 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
                 background: "#fff",
                 px: 2.5,
                 py: 0.5,
-                mb: 1.4,
+                mb: 1.6,
                 fontSize: 12,
                 minWidth: 0,
                 height: "auto",
