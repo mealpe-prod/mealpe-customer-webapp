@@ -361,12 +361,16 @@ const MessDetails = () => {
       <div className="flex items-center justify-end space-x-3">
         <button
           onClick={() => handleRsvp(meal, true, isTomorrow)}
-          disabled={isButtonDisabled}
-          className={`rounded-[12px] cursor-pointer px-6 py-2.5 text-sm font-medium active:scale-95 transition-transform duration-200 ${
+          disabled={
             isPastDeadline
-              ? "bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed"
-              : userSelectedYes
+              ? true // Not changeable after deadline
+              : isButtonDisabled
+          }
+          className={`rounded-[12px] cursor-pointer px-6 py-2.5 text-sm font-medium active:scale-95 transition-transform duration-200 ${
+            userSelectedYes
               ? "bg-green-50 text-green-700 border border-green-300 font-medium"
+              : isPastDeadline
+              ? "bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed"
               : "border border-gray-200"
           }`}
         >
@@ -374,12 +378,16 @@ const MessDetails = () => {
         </button>
         <button
           onClick={() => handleRsvp(meal, false, isTomorrow)}
-          disabled={isButtonDisabled}
-          className={`rounded-[12px] cursor-pointer px-6 py-2.5 text-sm font-medium active:scale-95 transition-transform duration-200 ${
+          disabled={
             isPastDeadline
-              ? "bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed"
-              : userSelectedNo
+              ? true // Not changeable after deadline
+              : isButtonDisabled
+          }
+          className={`rounded-[12px] cursor-pointer px-6 py-2.5 text-sm font-medium active:scale-95 transition-transform duration-200 ${
+            userSelectedNo
               ? "bg-red-50 text-red-600 border border-red-300 font-medium"
+              : isPastDeadline
+              ? "bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed"
               : "border border-gray-200"
           }`}
         >
