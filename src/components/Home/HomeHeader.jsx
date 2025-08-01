@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -24,6 +24,10 @@ const HomeHeader = ({
   setRestaurantsLoading,
 }) => {
   const navigate = useNavigate();
+
+  // State to track if search bar is focused
+  const [searchFocused, setSearchFocused] = useState(false);
+  const searchInputRef = useRef(null);
 
   const handleCategorySelect = async (categoryId) => {
     try {
@@ -87,6 +91,21 @@ const HomeHeader = ({
         setRestaurantsLoading(false);
       }
     }
+  };
+
+  // Hide categories when search loses focus, but allow click on categories
+  // by using a timeout to delay blur so click can register
+  const blurTimeout = useRef();
+
+  const handleSearchFocus = () => {
+    if (blurTimeout.current) clearTimeout(blurTimeout.current);
+    setSearchFocused(true);
+  };
+
+  const handleSearchBlur = () => {
+    blurTimeout.current = setTimeout(() => {
+      setSearchFocused(false);
+    }, 120); // enough time for category button click
   };
 
   return (
@@ -153,10 +172,13 @@ const HomeHeader = ({
         <div className="mt-3 space-y-3">
           <div className="relative">
             <input
+              ref={searchInputRef}
               type="text"
               placeholder="Search restaurants"
               value={searchQuery}
               onChange={handleSearchChange}
+              onFocus={handleSearchFocus}
+              onBlur={handleSearchBlur}
               className="w-full p-3 pl-12 pr-12 text-sm rounded-[12px] border border-gray-200 focus:outline-none focus:border-[#FF583A] focus:ring-2 focus:ring-[#FF583A]/10 transition-all duration-300 shadow-sm"
             />
             <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#FF583A]">
@@ -183,11 +205,12 @@ const HomeHeader = ({
             )}
           </div>
 
-          {/* Categories */}
-          {searchQuery && categories.length > 0 && (
+          {/* Categories only when search bar is focused */}
+          {categories.length > 0 && searchFocused && (
             <div className="overflow-x-auto hide-scrollbar">
               <div className="flex space-x-2 whitespace-nowrap py-1">
                 <button
+                  onMouseDown={e => e.preventDefault()}
                   onClick={() => handleCategorySelect(null)}
                   className={`px-3 py-1.5 rounded-[12px] text-sm transition-all duration-300 flex items-center active:scale-95 cursor-pointer ${
                     !selectedCategory
@@ -201,6 +224,7 @@ const HomeHeader = ({
                 {categories.map((category) => (
                   <button
                     key={category.categoryId}
+                    onMouseDown={e => e.preventDefault()}
                     onClick={() => handleCategorySelect(category.categoryId)}
                     className={`px-3 py-1.5 cursor-pointer rounded-[12px] text-sm transition-all duration-300 flex items-center min-w-fit active:scale-95 ${
                       selectedCategory === category.categoryId
