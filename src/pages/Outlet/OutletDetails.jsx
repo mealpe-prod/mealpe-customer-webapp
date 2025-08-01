@@ -20,6 +20,9 @@ import MenuSection from "../../components/Outlet/MenuSection";
 import MenuItemCard from "../../components/Outlet/MenuItemCard";
 import OutletDetailsSkeleton from "../../components/Outlet/OutletDetailsSkeleton";
 
+const PRICE_MIN = 0;
+const PRICE_MAX = 2000;
+
 const OutletDetails = () => {
   const { user } = useSelector((state) => state.auth);
   const { outletId } = useParams();
@@ -34,6 +37,8 @@ const OutletDetails = () => {
   const [menuError, setMenuError] = useState(null);
   const [dietFilter, setDietFilter] = useState("all"); // "all", "veg", "nonveg", "egg"
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
+  const [drawerCategoryFilter, setDrawerCategoryFilter] = useState("all");
+  const [priceRange, setPriceRange] = useState([PRICE_MIN, PRICE_MAX]);
   const cartItemsCount = useSelector((state) => state.cart.items);
   const navigate = useNavigate();
 
@@ -107,16 +112,19 @@ const OutletDetails = () => {
 
   const { outdetails, menuItems } = outletDetails;
 
-  // Filter menu items based on search query, active category, and diet preference
+  // Filter menu items based on search query, active category, diet preference, category, and price range
   const filteredMenuItems = menuItems.filter((item) => {
     const matchesSearch =
       item.itemname.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (item.itemdescription &&
         item.itemdescription.toLowerCase().includes(searchQuery.toLowerCase()));
 
+    // Use drawerCategoryFilter if set, else activeCategory
+    const categoryToFilter = drawerCategoryFilter !== "all" ? drawerCategoryFilter : activeCategory;
+
     const matchesCategory =
-      activeCategory === "all" ||
-      item?.item_categoryid?.categoryid === activeCategory;
+      categoryToFilter === "all" ||
+      item?.item_categoryid?.categoryid === categoryToFilter;
 
     // Filter by diet type (attributeid: 1=veg, 2=non-veg, 3=egg)
     const matchesDiet =
@@ -125,7 +133,12 @@ const OutletDetails = () => {
       (dietFilter === "nonveg" && item.attributeid === 2) ||
       (dietFilter === "egg" && item.attributeid === 3);
 
-    return matchesSearch && matchesCategory && matchesDiet;
+    // Price filter
+    const price = Number(item.price) || 0;
+    const matchesPrice =
+      price >= priceRange[0] && price <= priceRange[1];
+
+    return matchesSearch && matchesCategory && matchesDiet && matchesPrice;
   });
 
   // Get recommended items
@@ -139,15 +152,49 @@ const OutletDetails = () => {
 
   const handleDietFilterChange = (filter) => {
     setDietFilter(filter);
-    setFilterDrawerOpen(false);
+    // setFilterDrawerOpen(false); // Don't close drawer on diet change
   };
 
   const openFilterDrawer = () => {
+    setDrawerCategoryFilter(activeCategory);
     setFilterDrawerOpen(true);
   };
 
   const closeFilterDrawer = () => {
     setFilterDrawerOpen(false);
+  };
+
+  // Handle category change in drawer
+  const handleDrawerCategoryChange = (categoryId) => {
+    setDrawerCategoryFilter(categoryId);
+  };
+
+  // Handle price range change in drawer
+  const handlePriceRangeChange = (e, idx) => {
+    let value = e.target.value;
+    if (value === "") value = "";
+    else value = Math.max(PRICE_MIN, Math.min(PRICE_MAX, Number(value)));
+    setPriceRange((prev) => {
+      const newRange = [...prev];
+      newRange[idx] = value;
+      // Ensure min <= max
+      if (idx === 0 && value > prev[1]) newRange[1] = value;
+      if (idx === 1 && value < prev[0]) newRange[0] = value;
+      return newRange;
+    });
+  };
+
+  // Apply filters from drawer
+  const handleApplyFilters = () => {
+    setActiveCategory(drawerCategoryFilter);
+    setFilterDrawerOpen(false);
+  };
+
+  // Reset filters in drawer
+  const handleResetFilters = () => {
+    setDrawerCategoryFilter("all");
+    setDietFilter("all");
+    setPriceRange([PRICE_MIN, PRICE_MAX]);
   };
 
   return (
@@ -166,7 +213,7 @@ const OutletDetails = () => {
         openFilterDrawer={openFilterDrawer}
       />
 
-      {(searchQuery || dietFilter !== "all" || activeCategory !== "all") && (
+      {(searchQuery || dietFilter !== "all" || activeCategory !== "all" || priceRange[0] !== PRICE_MIN || priceRange[1] !== PRICE_MAX) && (
         <div className="flex items-center gap-2 px-4 py-2 mb-4 text-sm text-gray-700">
           <Check fontSize="small" className="w-4 h-4 text-[#FF583A]" />
           <span className="font-medium">{filteredMenuItems.length}</span>
@@ -174,7 +221,7 @@ const OutletDetails = () => {
             {filteredMenuItems.length === 1
               ? "match "
               : "matches "}
-            for "{searchQuery || dietFilter || activeCategory}"
+            for "{searchQuery || dietFilter || (activeCategory !== "all" && outdetails.Menu_Categories?.find(c => c.categoryid === activeCategory)?.categoryname) || "filters"}"
           </span>
         </div>
       )}
@@ -195,7 +242,7 @@ const OutletDetails = () => {
           sx: {
             borderTopLeftRadius: "24px",
             borderTopRightRadius: "24px",
-            maxHeight: "70%",
+            maxHeight: "80%",
             boxShadow: "0 -4px 20px rgba(0, 0, 0, 0.1)",
           },
         }}
@@ -216,13 +263,110 @@ const OutletDetails = () => {
             </button>
           </div>
 
+          {/* Category Filter in Drawer */}
+          <div className="mb-8">
+            <h4 className="text-base font-semibold text-gray-700 mb-4">
+              Categories
+            </h4>
+            <div className="flex flex-wrap gap-2 justify-start">
+              <button
+                className={`px-3 py-1.5 rounded-lg border transition-all duration-300 cursor-pointer ${
+                  drawerCategoryFilter === "all"
+                    ? "bg-[#FF583A]/10 border-[#FF583A] text-[#FF583A]"
+                    : "bg-white border-gray-200 text-gray-800 hover:border-[#FF583A]/50 hover:bg-[#FF583A]/5"
+                }`}
+                onClick={() => handleDrawerCategoryChange("all")}
+              >
+                All
+              </button>
+              {outdetails.Menu_Categories?.filter((cat) => cat.status).map((cat) => (
+                <button
+                  key={cat.categoryid}
+                  className={`px-3 py-1.5 rounded-lg border transition-all duration-300 cursor-pointer ${
+                    drawerCategoryFilter === cat.categoryid
+                      ? "bg-[#FF583A]/10 border-[#FF583A] text-[#FF583A]"
+                      : "bg-white border-gray-200 text-gray-800 hover:border-[#FF583A]/50 hover:bg-[#FF583A]/5"
+                  }`}
+                  onClick={() => handleDrawerCategoryChange(cat.categoryid)}
+                >
+                  {cat.categoryname}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Price Range Filter */}
+          <div className="mb-8">
+            <h4 className="text-base font-semibold text-gray-700 mb-4">
+              Price Range (₹)
+            </h4>
+            {/* Show actual price range available */}
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-xs text-gray-500">
+                Available: ₹{PRICE_MIN} - ₹{PRICE_MAX}
+              </span>
+            </div>
+            <div className="flex flex-col gap-2">
+              {/* Slider for price range */}
+              <input
+                type="range"
+                min={PRICE_MIN}
+                max={PRICE_MAX}
+                value={priceRange[0]}
+                onChange={(e) => handlePriceRangeChange(e, 0)}
+                className="w-full accent-[#FF583A]"
+                step={1}
+                style={{ marginBottom: 0 }}
+              />
+              <input
+                type="range"
+                min={PRICE_MIN}
+                max={PRICE_MAX}
+                value={priceRange[1]}
+                onChange={(e) => handlePriceRangeChange(e, 1)}
+                className="w-full accent-[#FF583A]"
+                step={1}
+                style={{ marginTop: 0 }}
+              />
+              <div className="flex items-center justify-between mt-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-500">Min</span>
+                  <input
+                    type="number"
+                    min={PRICE_MIN}
+                    max={priceRange[1]}
+                    value={priceRange[0]}
+                    onChange={(e) => handlePriceRangeChange(e, 0)}
+                    className="w-16 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:border-[#FF583A] text-xs"
+                  />
+                </div>
+                <span className="text-gray-500">-</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-500">Max</span>
+                  <input
+                    type="number"
+                    min={priceRange[0]}
+                    max={PRICE_MAX}
+                    value={priceRange[1]}
+                    onChange={(e) => handlePriceRangeChange(e, 1)}
+                    className="w-16 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:border-[#FF583A] text-xs"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="text-xs text-gray-400 mt-1">
+              Selected: ₹{priceRange[0]} &nbsp; - &nbsp; ₹{priceRange[1]}
+            </div>
+          </div>
+
+          {/* Diet Preferences */}
           <div className="mb-8">
             <h4 className="text-base font-semibold text-gray-700 mb-4">
               Diet Preferences
             </h4>
             <div className="flex flex-wrap gap-2 justify-start">
               <button
-                className={`flex items-center px-3 py-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                className={`flex items-center px-3 py-1.5 rounded-lg transition-all duration-300 cursor-pointer ${
                   dietFilter === "all"
                     ? "bg-[#FF583A]/10 border border-[#FF583A]"
                     : "bg-white border border-gray-200 hover:border-[#FF583A]/50 hover:bg-[#FF583A]/5"
@@ -230,7 +374,7 @@ const OutletDetails = () => {
                 onClick={() => handleDietFilterChange("all")}
               >
                 <div
-                  className={`w-5 h-5 rounded-full flex items-center justify-center mr-1 ${
+                  className={`w-5 h-5 rounded-lg flex items-center justify-center mr-1 ${
                     dietFilter === "all" ? "bg-[#FF583A]" : "bg-gray-100"
                   }`}
                 >
@@ -251,7 +395,7 @@ const OutletDetails = () => {
               </button>
 
               <button
-                className={`flex items-center px-3 py-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                className={`flex items-center px-3 py-1.5 rounded-lg transition-all duration-300 cursor-pointer ${
                   dietFilter === "veg"
                     ? "bg-green-50 border border-green-600"
                     : "bg-white border border-gray-200 hover:border-green-600/50 hover:bg-green-50/50"
@@ -259,7 +403,7 @@ const OutletDetails = () => {
                 onClick={() => handleDietFilterChange("veg")}
               >
                 <div
-                  className={`w-5 h-5 rounded-full flex items-center justify-center mr-1 ${
+                  className={`w-5 h-5 rounded-lg flex items-center justify-center mr-1 ${
                     dietFilter === "veg" ? "bg-green-600" : ""
                   }`}
                 >
@@ -298,7 +442,7 @@ const OutletDetails = () => {
               </button>
 
               <button
-                className={`flex items-center px-3 py-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                className={`flex items-center px-3 py-1.5 rounded-lg transition-all duration-300 cursor-pointer ${
                   dietFilter === "nonveg"
                     ? "bg-red-50 border border-red-600"
                     : "bg-white border border-gray-200 hover:border-red-600/50 hover:bg-red-50/50"
@@ -306,7 +450,7 @@ const OutletDetails = () => {
                 onClick={() => handleDietFilterChange("nonveg")}
               >
                 <div
-                  className={`w-5 h-5 rounded-full flex items-center justify-center mr-1 ${
+                  className={`w-5 h-5 rounded-lg flex items-center justify-center mr-1 ${
                     dietFilter === "nonveg" ? "bg-red-600" : ""
                   }`}
                 >
@@ -343,7 +487,7 @@ const OutletDetails = () => {
               </button>
 
               <button
-                className={`flex items-center px-3 py-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                className={`flex items-center px-3 py-1.5 rounded-lg transition-all duration-300 cursor-pointer ${
                   dietFilter === "egg"
                     ? "bg-yellow-50 border border-yellow-500"
                     : "bg-white border border-gray-200 hover:border-yellow-500/50 hover:bg-yellow-50/50"
@@ -351,7 +495,7 @@ const OutletDetails = () => {
                 onClick={() => handleDietFilterChange("egg")}
               >
                 <div
-                  className={`w-5 h-5 rounded-full flex items-center justify-center mr-1 ${
+                  className={`w-5 h-5 rounded-lg flex items-center justify-center mr-1 ${
                     dietFilter === "egg" ? "bg-yellow-500" : ""
                   }`}
                 >
@@ -391,14 +535,20 @@ const OutletDetails = () => {
             </div>
           </div>
 
-          {/* <div className="flex justify-center">
-            <button 
-              onClick={closeFilterDrawer}
-              className="w-full py-3.5 bg-[#FF583A] text-white rounded-xl font-medium text-base shadow-lg shadow-[#FF583A]/30 hover:bg-[#FF583A]/90 active:scale-98 transition-all duration-200"
+          <div className="flex justify-between gap-2">
+            <button
+              onClick={handleResetFilters}
+              className="w-1/3 py-2 bg-gray-100 text-gray-700 rounded-xl font-medium text-base hover:bg-gray-200 active:scale-98 transition-all duration-200"
+            >
+              Reset
+            </button>
+            <button
+              onClick={handleApplyFilters}
+              className="w-2/3 py-2 bg-[#FF583A] text-white rounded-xl font-medium text-base shadow-lg shadow-[#FF583A]/30 hover:bg-[#FF583A]/90 active:scale-98 transition-all duration-200"
             >
               Apply Filters
             </button>
-          </div> */}
+          </div>
         </div>
       </Drawer>
 
