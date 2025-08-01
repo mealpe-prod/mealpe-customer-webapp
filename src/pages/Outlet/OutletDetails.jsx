@@ -270,7 +270,7 @@ const OutletDetails = () => {
             </h4>
             <div className="flex flex-wrap gap-2 justify-start">
               <button
-                className={`px-3 py-1.5 rounded-lg border transition-all duration-300 cursor-pointer text-xs font-semibold ${
+                className={`px-3 py-1.5 rounded-lg border transition-all duration-300 cursor-pointer text-xs font-medium ${
                   drawerCategoryFilter === "all"
                     ? "bg-[#FF583A]/10 border-[#FF583A] text-[#FF583A]"
                     : "bg-white border-gray-200 text-gray-800 hover:border-[#FF583A]/50 hover:bg-[#FF583A]/5"
@@ -282,7 +282,7 @@ const OutletDetails = () => {
               {outdetails.Menu_Categories?.filter((cat) => cat.status).map((cat) => (
                 <button
                   key={cat.categoryid}
-                  className={`px-3 py-1.5 rounded-lg border transition-all duration-300 cursor-pointer text-xs font-semibold ${
+                  className={`px-3 py-1.5 rounded-lg border transition-all duration-300 cursor-pointer text-xs font-medium ${
                     drawerCategoryFilter === cat.categoryid
                       ? "bg-[#FF583A]/10 border-[#FF583A] text-[#FF583A]"
                       : "bg-white border-gray-200 text-gray-800 hover:border-[#FF583A]/50 hover:bg-[#FF583A]/5"
@@ -328,31 +328,7 @@ const OutletDetails = () => {
                 step={1}
                 style={{ marginTop: 0 }}
               />
-              <div className="flex items-center justify-between mt-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-500">Min</span>
-                  <input
-                    type="number"
-                    min={PRICE_MIN}
-                    max={priceRange[1]}
-                    value={priceRange[0]}
-                    onChange={(e) => handlePriceRangeChange(e, 0)}
-                    className="w-16 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:border-[#FF583A] text-xs"
-                  />
-                </div>
-                <span className="text-gray-500">-</span>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-500">Max</span>
-                  <input
-                    type="number"
-                    min={priceRange[0]}
-                    max={PRICE_MAX}
-                    value={priceRange[1]}
-                    onChange={(e) => handlePriceRangeChange(e, 1)}
-                    className="w-16 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:border-[#FF583A] text-xs"
-                  />
-                </div>
-              </div>
+              
             </div>
             <div className="text-xs text-gray-400 mt-1">
               Selected: ₹{priceRange[0]} &nbsp; - &nbsp; ₹{priceRange[1]}
