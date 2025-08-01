@@ -90,7 +90,7 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
         sx={{
           width: "100%",
           px: 0,
-          pt: 0,
+          pt: 0, // keep as is, since this is already 0
         }}
       >
         <Box
@@ -101,7 +101,7 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
             borderRadius: 0,
             boxShadow: "0px 2px 8px rgba(0,0,0,0.04)",
             px: { xs: 2, sm: 3 },
-            py: { xs: 1.5, sm: 2 },
+            py: { xs: 0.5, sm: 1 }, // reduced padding from top (was { xs: 1.5, sm: 2 })
             display: "flex",
             alignItems: "center",
             position: "relative",
@@ -252,7 +252,7 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
               sx={{
                 color: "#fff",
                 fontWeight: 600,
-                fontSize: 15,
+                fontSize: 12,
                 textTransform: "none",
                 minWidth: 0,
                 px: 0.5,
@@ -278,7 +278,7 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
                 background: "#fff",
                 px: 2.5,
                 py: 0.5,
-                mb: 1,
+                mb: 1.4,
                 fontSize: 12,
                 minWidth: 0,
                 height: "auto",
