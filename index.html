@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="/src/assets/logo2.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="MealPe - Customer App" />
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="apple-mobile-web-app-title" content="MealPe" />
+  <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <title>MealPe - Customer App</title>
+  <script>
+    // Capture the beforeinstallprompt event as early as possible
+    window.deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent the mini-infobar from appearing on mobile
+      e.preventDefault();
+      // Store the event so it can be triggered later
+      window.deferredPrompt = e;
+      console.log('beforeinstallprompt event captured');
+    });
+  </script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+  <!-- The Vite PWA plugin will handle the service worker registration -->
+</body>
+
+</html>
