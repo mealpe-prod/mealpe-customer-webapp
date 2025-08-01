@@ -72,8 +72,8 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
         left: isMediumScreen ? "50%" : 0,
         right: isMediumScreen ? "auto" : 0,
         transform: isMediumScreen ? "translateX(-50%)" : "none",
-        maxWidth: isMediumScreen ? "600px" : "100%",
-        width: isMediumScreen ? "600px" : "100%",
+        maxWidth: isMediumScreen ? "400px" : "100%",
+        width: isMediumScreen ? "400px" : "100%",
         zIndex: 20,
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0,
@@ -90,7 +90,7 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
         sx={{
           width: "100%",
           px: 0,
-          pt: 0, // keep as is, since this is already 0
+          pt: 0,
         }}
       >
         <Box
@@ -100,12 +100,12 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
             borderTopRightRadius: 0,
             borderRadius: 0,
             boxShadow: "0px 2px 8px rgba(0,0,0,0.04)",
-            px: { xs: 2, sm: 3 },
-            py: { xs: 0.5, sm: 1 }, // reduced padding from top (was { xs: 1.5, sm: 2 })
+            px: { xs: 2, sm: 3, md: 1.5 },
+            py: { xs: 0.5, sm: 1, md: 0.5 },
             display: "flex",
             alignItems: "center",
             position: "relative",
-            minHeight: 80,
+            minHeight: { xs: 80, md: 60 },
           }}
         >
           {/* Orders count tab */}
@@ -136,7 +136,6 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
             {`Orders ${activeStep + 1}/${liveOrders.length}`}
           </Box>
 
-    
           {/* Left: Outlet name and status */}
           <Box
             sx={{
@@ -145,8 +144,8 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
               flexDirection: "column",
               justifyContent: "center",
               minWidth: 0,
-              ml: { xs: 0, sm: 2 },
-              pl: { xs: 0, sm: 7 },
+              ml: { xs: 0, sm: 2, md: 1 },
+              pl: { xs: 0, sm: 7, md: 4 },
             }}
           >
             <Typography
@@ -154,13 +153,13 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
               sx={{
                 color: "#fff",
                 fontWeight: 700,
-                fontSize: { xs: 16, sm: 18 },
+                fontSize: { xs: 16, sm: 18, md: 16 },
                 lineHeight: 1.2,
                 mb: 0.2,
                 textOverflow: "ellipsis",
                 overflow: "hidden",
                 whiteSpace: "nowrap",
-                maxWidth: { xs: 120, sm: 180 },
+                maxWidth: { xs: 120, sm: 180, md: 140 },
               }}
               title={liveOrders[activeStep].outletname}
             >
@@ -218,7 +217,7 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
               sx={{
                 color: "#fff",
                 fontWeight: 600,
-                fontSize: 12,
+                fontSize: { xs: 12, md: 11 },
                 textTransform: "none",
                 minWidth: 0,
                 px: 0.5,
@@ -242,8 +241,8 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
                 border: "2px solid #fff",
                 color: "#FF583A",
                 background: "#fff",
-                px: 2.5,
-                py: 0.5,
+                px: { xs: 2.5, md: 2 },
+                py: { xs: 0.5, md: 0.3 },
                 mb: 1.6,
                 fontSize: 12,
                 minWidth: 0,
@@ -264,21 +263,25 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
           </Box>
         </Box>
 
-        {/* Order navigation and details */}
+        {/* Order navigation and details - Modified for desktop minimal view */}
         <Box
           sx={{
-            background: "#fff",
-            px: { xs: 2, sm: 3 },
-            py: 1.5,
+            // Remove white background on desktop, keep on mobile
+            background: { xs: "#fff", md: "transparent" },
+            px: { xs: 2, sm: 3, md: 0.5 }, // Further reduced padding on desktop
+            py: { xs: 1.5, md: 0.3 }, // Minimal padding on desktop
             display: "flex",
             alignItems: "center",
             borderBottomLeftRadius: 0,
             borderBottomRightRadius: 0,
             borderRadius: 0,
-            border: "1px solid #FF583A",
+            // Remove border and shadow on desktop
+            border: { xs: "1px solid #FF583A", md: "none" },
             borderTop: "none",
-            boxShadow: "0 2px 8px rgba(255,88,58,0.10)",
+            boxShadow: { xs: "0 2px 8px rgba(255,88,58,0.10)", md: "none" },
             position: "relative",
+            // Minimal height on desktop
+            minHeight: { xs: "auto", md: 32 },
           }}
         >
           {/* Back button */}
@@ -287,19 +290,21 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
             onClick={handleBack}
             disabled={activeStep === 0}
             sx={{
-              border: "1px solid #FF583A",
+              border: { xs: "1px solid #FF583A", md: "none" },
               color: "#FF583A",
-              background: "#fff",
-              mr: 1,
+              background: { xs: "#fff", md: "rgba(255,88,58,0.1)" },
+              mr: { xs: 1, md: 0.5 },
+              // Smaller size on desktop
+              width: { xs: 40, md: 28 },
+              height: { xs: 40, md: 28 },
               "&:hover": {
-                background: "#FFF3F0",
+                background: { xs: "#FFF3F0", md: "rgba(255,88,58,0.2)" },
               },
               visibility: maxSteps > 1 ? "visible" : "hidden",
             }}
           >
-            <ChevronLeftIcon />
+            <ChevronLeftIcon sx={{ fontSize: { xs: 24, md: 16 } }} />
           </IconButton>
-
 
           {/* Next button */}
           <IconButton
@@ -307,17 +312,20 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
             onClick={handleNext}
             disabled={activeStep === maxSteps - 1}
             sx={{
-              border: "1px solid #FF583A",
+              border: { xs: "1px solid #FF583A", md: "none" },
               color: "#FF583A",
-              background: "#fff",
-              ml: 1,
+              background: { xs: "#fff", md: "rgba(255,88,58,0.1)" },
+              ml: { xs: 1, md: 0.5 },
+              // Smaller size on desktop
+              width: { xs: 40, md: 28 },
+              height: { xs: 40, md: 28 },
               "&:hover": {
-                background: "#FFF3F0",
+                background: { xs: "#FFF3F0", md: "rgba(255,88,58,0.2)" },
               },
               visibility: maxSteps > 1 ? "visible" : "hidden",
             }}
           >
-            <ChevronRightIcon />
+            <ChevronRightIcon sx={{ fontSize: { xs: 24, md: 16 } }} />
           </IconButton>
         </Box>
       </Box>
