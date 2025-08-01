@@ -184,7 +184,7 @@ const HomeHeader = ({
           </div>
 
           {/* Categories */}
-          {categories.length > 0 && (
+          {searchQuery && categories.length > 0 && (
             <div className="overflow-x-auto hide-scrollbar">
               <div className="flex space-x-2 whitespace-nowrap py-1">
                 <button
