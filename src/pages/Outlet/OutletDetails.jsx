@@ -270,7 +270,7 @@ const OutletDetails = () => {
             </h4>
             <div className="flex flex-wrap gap-2 justify-start">
               <button
-                className={`px-3 py-1.5 rounded-lg border transition-all duration-300 cursor-pointer ${
+                className={`px-3 py-1.5 rounded-lg border transition-all duration-300 cursor-pointer text-xs font-semibold ${
                   drawerCategoryFilter === "all"
                     ? "bg-[#FF583A]/10 border-[#FF583A] text-[#FF583A]"
                     : "bg-white border-gray-200 text-gray-800 hover:border-[#FF583A]/50 hover:bg-[#FF583A]/5"
@@ -282,7 +282,7 @@ const OutletDetails = () => {
               {outdetails.Menu_Categories?.filter((cat) => cat.status).map((cat) => (
                 <button
                   key={cat.categoryid}
-                  className={`px-3 py-1.5 rounded-lg border transition-all duration-300 cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-lg border transition-all duration-300 cursor-pointer text-xs font-semibold ${
                     drawerCategoryFilter === cat.categoryid
                       ? "bg-[#FF583A]/10 border-[#FF583A] text-[#FF583A]"
                       : "bg-white border-gray-200 text-gray-800 hover:border-[#FF583A]/50 hover:bg-[#FF583A]/5"
