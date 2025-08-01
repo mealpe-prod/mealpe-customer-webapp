@@ -28,7 +28,7 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const isMediumScreen = useMediaQuery(theme.breakpoints.up("md"));
-  const bottomPosition = isSmallScreen ? 80 : 0;
+  const bottomPosition = isSmallScreen ? 5 : 0;
   const [activeStep, setActiveStep] = useState(0);
   const maxSteps = liveOrders.length;
 
@@ -75,282 +75,285 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
         maxWidth: isMediumScreen ? "600px" : "100%",
         width: isMediumScreen ? "600px" : "100%",
         zIndex: 20,
-        borderTopLeftRadius: 16,
-        borderTopRightRadius: 16,
-        overflow: "hidden",
-        pb: 0.5,
-        backgroundColor: "transparent",
-        // backdropFilter: "blur(8px)",
-        boxShadow: "0 -4px 20px rgba(0, 0, 0, 0.05)",
-        mb: isSmallScreen ? 0 : 0,
-        borderTop: "1px solid rgba(0, 0, 0, 0.06)",
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+        borderRadius: 0,
+        overflow: "visible",
+        background: "transparent",
+        boxShadow: "none",
+        mb: 0,
+        borderTop: "none",
+        p: 0,
       }}
     >
       <Box
         sx={{
-          maxWidth: "max-content",
-          mx: "auto",
           width: "100%",
-          px: { xs: 1, sm: 2 },
-          pt: 0.5,
+          px: 0,
+          pt: 0,
         }}
       >
-        {/* Show active step of total step above, with space at bottom */}
-        <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 1.5 }}>
-          <Typography
-            variant="body2"
-            color="#fff"
+        <Box
+          sx={{
+            background: "linear-gradient(90deg, #FF583A 0%, #FF583A 100%)",
+            borderTopLeftRadius: 0,
+            borderTopRightRadius: 0,
+            borderRadius: 0,
+            boxShadow: "0px 2px 8px rgba(0,0,0,0.04)",
+            px: { xs: 2, sm: 3 },
+            py: { xs: 1.5, sm: 2 },
+            display: "flex",
+            alignItems: "center",
+            position: "relative",
+            minHeight: 80,
+          }}
+        >
+          {/* Orders count tab */}
+          <Box
             sx={{
-              fontSize: { xs: 11, sm: 12 },
-              fontWeight: 500,
-              px: 1,
-              py: 0.2,
-              borderRadius: 1,
-              backgroundColor: "#fff",
-              color: "#000000",
-              display: "inline-block",
-              boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
+              position: "absolute",
+              top: 0,
+              left: 0,
+              transform: "translateY(-60%)",
+              background: "#fff",
+              color: "#FF583A",
+              fontWeight: 700,
+              fontSize: 13,
+              px: 2,
+              py: 0.5,
+              borderTopLeftRadius: 12,
+              borderTopRightRadius: 12,
+              borderBottomLeftRadius: 0,
+              borderBottomRightRadius: 0,
+              boxShadow: "0 2px 8px rgba(255,88,58,0.10)",
+              zIndex: 2,
+              border: "1px solid #FF583A",
+              borderBottom: "none",
+              minWidth: 80,
+              textAlign: "center",
             }}
           >
-            {`${activeStep + 1} of ${liveOrders.length}`}
-          </Typography>
-        </Box>
-        {/* Slider */}
-        <Box sx={{ position: "relative" }}>
-          <SwipeableViews
-            axis="x"
-            index={activeStep}
-            onChangeIndex={handleStepChange}
-            enableMouseEvents
-            style={{ paddingBottom: "4px" }}
+            {`Orders ${activeStep + 1}/${liveOrders.length}`}
+          </Box>
+
+          {/* Outlet logo in center */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flex: 1,
+              position: "relative",
+              minWidth: 0,
+            }}
           >
-            {liveOrders.map((order, index) => (
-              <Box
-                key={order.orderid}
-                sx={{ px: 1, mb: isSmallScreen ? 0 : 0 }}
-              >
-                {Math.abs(activeStep - index) <= 2 ? (
-                  <Paper
-                    elevation={2}
-                    sx={{
-                      p: { xs: 1.25, sm: 1.5 },
-                      borderRadius: 3,
-                      border: "1px solid",
-                      borderColor: "#FF583A",
-                      cursor: "pointer",
-                      transition: "all 0.2s",
-                      "&:hover": {
-                        boxShadow: 3,
-                        borderColor: "#fff",
-                      },
-                      maxWidth: { xs: "100%", sm: 450 },
-                      mx: "auto",
-                      backgroundColor: "#FF583A",
-                      position: "relative",
-                    }}
-                  >
-                    {/* Compact layout with all info in one row */}
-                    <Grid container alignItems="center" spacing={1}>
-                      {/* Logo */}
-                      <Grid item>
-                        <Avatar
-                          src={order.logo || mealpelogo}
-                          alt={order.outletname}
-                          sx={{
-                            width: { xs: 36, sm: 40 },
-                            height: { xs: 36, sm: 40 },
-                            border: "1px solid",
-                            borderColor: "#fff",
-                            backgroundColor: "#fff",
-                          }}
-                          imgProps={{
-                            onError: (e) => {
-                              e.target.src = mealpelogo;
-                            },
-                          }}
-                        />
-                      </Grid>
+            <Avatar
+              src={liveOrders[activeStep].logo || mealpelogo}
+              alt={liveOrders[activeStep].outletname}
+              sx={{
+                width: 56,
+                height: 56,
+                border: "3px solid #fff",
+                backgroundColor: "#fff",
+                boxShadow: "0 2px 8px rgba(255,88,58,0.10)",
+                mx: "auto",
+                position: "absolute",
+                left: "30%",
+                top: "-32px",
+                transform: "translateX(-50%)",
+                zIndex: 3,
+              }}
+              imgProps={{
+                onError: (e) => {
+                  e.target.src = mealpelogo;
+                },
+              }}
+            />
+          </Box>
 
-                      {/* Restaurant Info and Status */}
-                      <Grid item xs>
-                        <Box>
-                          <Typography
-                            variant="h6"
-                            fontWeight="bold"
-                            noWrap
-                            sx={{
-                              fontSize: { xs: 14, sm: 16 },
-                              lineHeight: 1.2,
-                              color: "#fff",
-                            }}
-                          >
-                            {order.outletname}
-                          </Typography>
+          {/* Left: Outlet name and status */}
+          <Box
+            sx={{
+              flex: 2,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              minWidth: 0,
+              ml: { xs: 0, sm: 2 },
+              pl: { xs: 0, sm: 7 },
+            }}
+          >
+            <Typography
+              variant="subtitle1"
+              sx={{
+                color: "#fff",
+                fontWeight: 700,
+                fontSize: { xs: 16, sm: 18 },
+                lineHeight: 1.2,
+                mb: 0.2,
+                textOverflow: "ellipsis",
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                maxWidth: { xs: 120, sm: 180 },
+              }}
+              title={liveOrders[activeStep].outletname}
+            >
+              {liveOrders[activeStep].outletname}
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "#fff",
+                fontWeight: 400,
+                fontSize: { xs: 13, sm: 14 },
+                opacity: 0.95,
+                display: "flex",
+                alignItems: "center",
+                gap: 0.5,
+              }}
+            >
+              Stage&nbsp;–&nbsp;
+              {liveOrders[activeStep].displaystatustext || "Order Placed"}
+            </Typography>
+          </Box>
 
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              mt: 0.5,
-                            }}
-                          >
-                            <Chip
-                              label={order.displaystatustext || "Order Placed"}
-                              color="warning"
-                              variant="outlined"
-                              size="small"
-                              sx={{
-                                fontSize: { xs: 10, sm: 11 },
-                                height: { xs: 20, sm: 24 },
-                                borderColor: "#FF583A",
-                                backgroundColor: "#fff",
-                                borderRadius: 6,
-                                fontWeight: 500,
-                                mr: 1,
-                                color: "#FF583A",
-                                // subtle shadow for professional look
-                                boxShadow: "0 1px 4px rgba(255,88,58,0.08)",
-                                letterSpacing: 0.2,
-                                "& .MuiChip-label": {
-                                  color: "#FF583A",
-                                  fontWeight: 500,
-                                },
-                              }}
-                            />
-
-                            <Stack
-                              direction="row"
-                              alignItems="center"
-                              spacing={0.5}
-                            >
-                              <AccessTimeIcon
-                                sx={{
-                                  fontSize: { xs: 14, sm: 15 },
-                                  color: "#fff",
-                                }}
-                              />
-                              <Typography
-                                variant="body2"
-                                fontWeight="medium"
-                                sx={{
-                                  fontSize: { xs: 11, sm: 12 },
-                                  lineHeight: 1.1,
-                                  color: "#fff",
-                                }}
-                              >
-                                {formatDate(order.scheduledate)}{" "}
-                                {order.scheduletime.substring(0, 5)}
-                              </Typography>
-                            </Stack>
-                          </Box>
-                        </Box>
-                      </Grid>
-
-                      {/* View Order Button */}
-                      <Grid item>
-                        <Button
-                          variant="contained"
-                          onClick={() => navigate(`/order/${order.orderid}`)}
-                          sx={{
-                            borderRadius: 50,
-                            textTransform: "none",
-                            fontWeight: "bold",
-                            border: "1px solid #fff",
-                            color: "#FF583A",
-                            px: { xs: 1.5, sm: 2 },
-                            py: 0.5,
-                            fontSize: { xs: 12, sm: 13 },
-                            minWidth: "auto",
-                            height: "auto",
-                            lineHeight: 1.5,
-                            whiteSpace: "nowrap",
-                            backgroundColor: "#fff",
-                            boxShadow: "none",
-                            "&:hover": {
-                              backgroundColor: "#fff",
-                              color: "#FF583A",
-                              borderColor: "#FF583A",
-                              boxShadow: "0 2px 8px rgba(255,88,58,0.08)",
-                            },
-                          }}
-                        >
-                          View Order
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </Paper>
-                ) : (
-                  <Skeleton
-                    variant="rectangular"
-                    width="100%"
-                    height={80}
-                    sx={{ borderRadius: 3, backgroundColor: "#fff" }}
-                  />
-                )}
-              </Box>
-            ))}
-          </SwipeableViews>
+          {/* Right: Refresh and Manage Order */}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-end",
+              justifyContent: "center",
+              gap: 0,
+              ml: "auto",
+              minWidth: 0,
+            }}
+          >
+            <Button
+              variant="text"
+              size="small"
+              onClick={refreshOrders}
+              disabled={refreshingOrders}
+              startIcon={
+                <RefreshIcon
+                  sx={{
+                    color: "#fff",
+                    fontSize: 20,
+                    animation: refreshingOrders
+                      ? "spin 1s linear infinite"
+                      : "none",
+                    "@keyframes spin": {
+                      "0%": { transform: "rotate(0deg)" },
+                      "100%": { transform: "rotate(360deg)" },
+                    },
+                  }}
+                />
+              }
+              sx={{
+                color: "#fff",
+                fontWeight: 600,
+                fontSize: 15,
+                textTransform: "none",
+                minWidth: 0,
+                px: 0.5,
+                mb: 0.5,
+                "&:hover": {
+                  background: "rgba(255,255,255,0.08)",
+                },
+              }}
+            >
+              Refresh
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={() =>
+                navigate(`/order/${liveOrders[activeStep].orderid}`)
+              }
+              sx={{
+                borderRadius: 999,
+                textTransform: "none",
+                fontWeight: 700,
+                border: "2px solid #fff",
+                color: "#FF583A",
+                background: "#fff",
+                px: 2.5,
+                py: 0.5,
+                mb: 1,
+                fontSize: 12,
+                minWidth: 0,
+                height: "auto",
+                lineHeight: 1.5,
+                whiteSpace: "nowrap",
+                boxShadow: "none",
+                "&:hover": {
+                  backgroundColor: "#fff",
+                  color: "#FF583A",
+                  borderColor: "#FF583A",
+                  boxShadow: "0 2px 8px rgba(255,88,58,0.08)",
+                },
+              }}
+            >
+              Manage Order
+            </Button>
+          </Box>
         </Box>
 
-        {/* Navigation */}
-        {/* <MobileStepper
-          steps={maxSteps}
-          position="static"
-          activeStep={activeStep}
+        {/* Order navigation and details */}
+        <Box
           sx={{
-            background: "transparent",
-            mt: 0.25,
-            mb: isSmallScreen ? 1 : 0,
-            "& .MuiMobileStepper-dot": {
-              width: 6,
-              height: 6,
-              mx: 0.4,
-            },
-            "& .MuiMobileStepper-dotActive": {
-              backgroundColor: "#FF583A",
-            },
+            background: "#fff",
+            px: { xs: 2, sm: 3 },
+            py: 1.5,
+            display: "flex",
+            alignItems: "center",
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0,
+            borderRadius: 0,
+            border: "1px solid #FF583A",
+            borderTop: "none",
+            boxShadow: "0 2px 8px rgba(255,88,58,0.10)",
+            position: "relative",
           }}
-          nextButton={
-            <IconButton
-              size="small"
-              onClick={handleNext}
-              disabled={activeStep === maxSteps - 1}
-              sx={{
-                border: "1px solid",
-                borderColor: "divider",
-                "&:hover": { backgroundColor: "rgba(0,0,0,0.04)" },
-                width: { xs: 20, sm: 24 },
-                height: { xs: 20, sm: 24 },
-                backgroundColor: "white",
-              }}
-            >
-              <ChevronRightIcon
-                fontSize={isSmallScreen ? "small" : "medium"}
-                sx={{ fontSize: isSmallScreen ? "16px" : "18px" }}
-              />
-            </IconButton>
-          }
-          backButton={
-            <IconButton
-              size="small"
-              onClick={handleBack}
-              disabled={activeStep === 0}
-              sx={{
-                border: "1px solid",
-                borderColor: "divider",
-                "&:hover": { backgroundColor: "rgba(0,0,0,0.04)" },
-                width: { xs: 20, sm: 24 },
-                height: { xs: 20, sm: 24 },
-                backgroundColor: "white",
-              }}
-            >
-              <ChevronLeftIcon
-                fontSize={isSmallScreen ? "small" : "medium"}
-                sx={{ fontSize: isSmallScreen ? "16px" : "18px" }}
-              />
-            </IconButton>
-          }
-        /> */}
+        >
+          {/* Back button */}
+          <IconButton
+            size="small"
+            onClick={handleBack}
+            disabled={activeStep === 0}
+            sx={{
+              border: "1px solid #FF583A",
+              color: "#FF583A",
+              background: "#fff",
+              mr: 1,
+              "&:hover": {
+                background: "#FFF3F0",
+              },
+              visibility: maxSteps > 1 ? "visible" : "hidden",
+            }}
+          >
+            <ChevronLeftIcon />
+          </IconButton>
+
+
+          {/* Next button */}
+          <IconButton
+            size="small"
+            onClick={handleNext}
+            disabled={activeStep === maxSteps - 1}
+            sx={{
+              border: "1px solid #FF583A",
+              color: "#FF583A",
+              background: "#fff",
+              ml: 1,
+              "&:hover": {
+                background: "#FFF3F0",
+              },
+              visibility: maxSteps > 1 ? "visible" : "hidden",
+            }}
+          >
+            <ChevronRightIcon />
+          </IconButton>
+        </Box>
       </Box>
     </Paper>
   );
