@@ -4,7 +4,7 @@ import SearchIcon from '@mui/icons-material/Search';
 
 const SearchBar = ({ searchQuery, setSearchQuery, openFilterDrawer }) => {
   return (
-    <div className="mb-2 px-2">
+    <div className="mb-2 px-2 mt-8">
       <div className="relative">
         <input
           type="text"

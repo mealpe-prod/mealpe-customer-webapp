@@ -49,9 +49,10 @@ const OutletHeader = ({
   };
 
   return (
-    <div className="relative h-56 overflow-hidden mb-4 rounded-b-[12px]">
-      <div className="relative h-full">
-        {/* Back button with improved visibility */}
+    <div className="relative">
+      {/* Header Image Section */}
+      <div className="relative h-64 overflow-hidden">
+        {/* Back button */}
         <div className="absolute top-4 left-4 z-10">
           <button
             onClick={() => navigate("/home")}
@@ -75,72 +76,79 @@ const OutletHeader = ({
           {/* Info button */}
           <button
             onClick={() => setShowOutletInfo(!showOutletInfo)}
-            className="text-white p-1 rounded-full bg-black/40 hover:bg-black/60 cursor-pointer shadow-md active:scale-95 transition-transform duration-200 flex items-center justify-center w-7 h-7"
+            className="text-white p-2 rounded-full bg-black/40 hover:bg-black/60 cursor-pointer shadow-md active:scale-95 transition-transform duration-200"
           >
-            <InfoOutlinedIcon fontSize="extra-small" />
+            <InfoOutlinedIcon fontSize="small" />
           </button>
 
           {/* View Menu button for mess */}
           {outletDetails.hasMess && (
             <button
               onClick={() => setIsMenuModalOpen(true)}
-              className="bg-white text-[#FF583A] px-3 py-2 rounded-lg font-medium text-xs md:text-sm active:scale-95 cursor-pointer transition-transform duration-200 shadow-md"
+              className="bg-[#FF583A] text-white px-4 py-2 rounded-lg font-medium text-sm active:scale-95 cursor-pointer transition-transform duration-200 shadow-md"
             >
               View Menu
             </button>
           )}
         </div>
 
-        {/* Image container with proper sizing */}
-        <div className="w-full h-full">
-          <img
-            src={outletDetails.headerImage || RestaurantImage}
-            alt={outletDetails.outletName}
-            className="w-full h-full object-cover object-center"
-          />
-          {/* Gradient overlay for better text visibility */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/80"></div>
-        </div>
+        {/* Header Image */}
+        <img
+          src={outletDetails.headerImage || RestaurantImage}
+          alt={outletDetails.outletName}
+          className="w-full h-full object-cover"
+        />
+        
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/50"></div>
       </div>
 
-      {/* Outlet details section */}
-      <div className="absolute bottom-0 left-0 right-0 p-4">
-        <div className="flex items-center justify-between">
-          <div onClick={() => setShowOutletInfo(true)} className="flex items-center">
-            <div 
-              className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-white shadow-lg mr-3 bg-black/20 cursor-pointer hover:scale-105 transition-transform duration-200"
-            >
-              <img
-                src={outletDetails.logo || RestroLogo}
-                alt="logo"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="text-white text-shadow-lg">
-              <h1 className="text-xl font-bold truncate max-w-[180px] sm:max-w-none drop-shadow-xl">
-                {isMobile ? truncateText(outletDetails.outletName, 18) : outletDetails.outletName}
-              </h1>
-              <p className="text-sm flex items-center gap-1 text-white/90 drop-shadow-xl">
-                <LocationOnIcon style={{ fontSize: '14px' }} className="drop-shadow-lg" />
-                <span className="truncate max-w-[180px] sm:max-w-none">
-                  {isMobile ? truncateText(outletDetails.address, 20) : outletDetails.address}
-                </span>
-              </p>
+      {/* Outlet Information Card - Positioned below the image */}
+      <div className="bg-white mx-4 -mt-12 relative z-20 rounded-lg shadow-md p-4">
+        <div className="flex items-start gap-4">
+          {/* Outlet Logo */}
+          <div 
+            className="w-15 md:w-20 h-15 md:h-20 rounded-2xl overflow-hidden border-2 border-gray-100 shadow-sm bg-white flex-shrink-0 cursor-pointer hover:scale-105 transition-transform duration-200"
+            onClick={() => setShowOutletInfo(true)}
+          >
+            <img
+              src={outletDetails.logo || RestroLogo}
+              alt="logo"
+              className="w-full h-full object-cover"
+            />
+          </div>
+
+          {/* Outlet Details */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start justify-between">
+              <div className="flex-1 min-w-0">
+                <h1 className="text-xl font-bold text-gray-900 mb-1 truncate">
+                  {outletDetails.outletName}
+                </h1>
+                
+                {/* Address */}
+                <div className="flex items-center gap-1 text-gray-600 mb-2">
+                  <LocationOnIcon style={{ fontSize: '16px' }} />
+                  <span className="text-sm truncate">
+                    {isMobile ? truncateText(outletDetails.address, 25) : outletDetails.address}
+                  </span>
+                </div>
+                
+                {/* Opening hours */}
+                <div className="flex items-center gap-1 text-gray-600">
+                  <AccessTimeIcon style={{ fontSize: '16px' }} />
+                  <span className="text-sm">
+                    {formatTime(outletDetails.openTime)} - {formatTime(outletDetails.closeTime)}
+                  </span>
+                </div>
+              </div>
               
-              {/* Opening hours */}
-              <div className="flex items-center gap-1 text-xs text-white/90 mt-1 drop-shadow-xl">
-                <AccessTimeIcon style={{ fontSize: '14px' }} className="drop-shadow-lg" />
-                <span>
-                  {formatTime(outletDetails.openTime)} - {formatTime(outletDetails.closeTime)}
-                </span>
+              {/* Rating badge */}
+              <div className="bg-green-600 text-white px-3 py-1.5 rounded-lg flex items-center gap-1 text-sm font-medium shadow-sm ml-4">
+                <StarIcon style={{ fontSize: '16px' }} />
+                <span>4.2</span>
               </div>
             </div>
-          </div>
-          
-          {/* Rating badge */}
-          <div className="bg-green-600 text-white px-2 py-1 rounded-lg flex items-center gap-1 text-sm font-medium shadow-lg">
-            <StarIcon style={{ fontSize: '16px' }} />
-            <span>4.2</span>
           </div>
         </div>
       </div>
@@ -286,7 +294,7 @@ const OutletHeader = ({
         />
       )}
       
-      {/* Add a fade-in animation and text shadow */}
+      {/* Add a fade-in animation */}
       <style jsx>{`
         @keyframes fadeIn {
           from { opacity: 0; }
@@ -294,9 +302,6 @@ const OutletHeader = ({
         }
         .animate-fade-in {
           animation: fadeIn 0.3s ease-out;
-        }
-        .text-shadow-lg {
-          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 4px 8px rgba(0, 0, 0, 0.6);
         }
       `}</style>
     </div>
