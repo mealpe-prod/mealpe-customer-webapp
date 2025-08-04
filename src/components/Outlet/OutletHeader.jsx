@@ -104,11 +104,11 @@ const OutletHeader = ({
       </div>
 
       {/* Outlet Information Card - Positioned below the image */}
-      <div className="bg-white mx-4 -mt-12 relative z-20 rounded-lg shadow-md p-4">
+      <div className="bg-white mx-2 -mt-12 relative z-20 rounded-lg shadow-md p-3">
         <div className="flex items-start gap-4">
           {/* Outlet Logo */}
           <div 
-            className="w-15 md:w-20 h-15 md:h-20 rounded-2xl overflow-hidden border-2 border-gray-100 shadow-sm bg-white flex-shrink-0 cursor-pointer hover:scale-105 transition-transform duration-200"
+            className="w-12 md:w-20 h-12 md:h-20 rounded-2xl overflow-hidden border-2 border-gray-100 shadow-sm bg-white flex-shrink-0 cursor-pointer hover:scale-105 transition-transform duration-200"
             onClick={() => setShowOutletInfo(true)}
           >
             <img
@@ -122,32 +122,32 @@ const OutletHeader = ({
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between">
               <div className="flex-1 min-w-0">
-                <h1 className="text-xl font-bold text-gray-900 mb-1 truncate">
+                <h1 className="text-md md:text-xl font-bold text-gray-900 mb-1 truncate">
                   {outletDetails.outletName}
                 </h1>
                 
                 {/* Address */}
                 <div className="flex items-center gap-1 text-gray-600 mb-2">
-                  <LocationOnIcon style={{ fontSize: '16px' }} />
-                  <span className="text-sm truncate">
-                    {isMobile ? truncateText(outletDetails.address, 25) : outletDetails.address}
+                  {/* <LocationOnIcon style={{ fontSize: '16px' }} /> */}
+                  <span className="text-xs break-words">
+                    {outletDetails.address}
                   </span>
                 </div>
                 
                 {/* Opening hours */}
-                <div className="flex items-center gap-1 text-gray-600">
+                {/* <div className="flex items-center gap-1 text-gray-600">
                   <AccessTimeIcon style={{ fontSize: '16px' }} />
                   <span className="text-sm">
                     {formatTime(outletDetails.openTime)} - {formatTime(outletDetails.closeTime)}
                   </span>
-                </div>
+                </div> */}
               </div>
               
               {/* Rating badge */}
-              <div className="bg-green-600 text-white px-3 py-1.5 rounded-lg flex items-center gap-1 text-sm font-medium shadow-sm ml-4">
+              {/* <div className="bg-green-600 text-white px-3 py-1.5 rounded-lg flex items-center gap-1 text-sm font-medium shadow-sm ml-4">
                 <StarIcon style={{ fontSize: '16px' }} />
                 <span>4.2</span>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
