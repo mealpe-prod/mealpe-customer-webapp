@@ -51,7 +51,7 @@ const OutletHeader = ({
   return (
     <div className="relative">
       {/* Header Image Section */}
-      <div className="relative h-64 overflow-hidden">
+      <div className="relative h-50 overflow-hidden">
         {/* Back button */}
         <div className="absolute top-4 left-4 z-10">
           <button
