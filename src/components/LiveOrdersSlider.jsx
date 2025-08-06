@@ -81,7 +81,7 @@ const LiveOrdersSlider = ({ liveOrders, refreshOrders, refreshingOrders }) => {
         overflow: "visible",
         background: "transparent",
         boxShadow: "none",
-        mb: 0,
+        mb: isMediumScreen ? 2 : liveOrders.length > 1 ? -0.2 : 8,
         borderTop: "none",
         p: 0,
       }}
