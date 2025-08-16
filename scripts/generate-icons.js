@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
-const inputFile = join(__dirname, '../src/assets/logo2.png');
+const inputFile = join(__dirname, '../src/assets/logoo.png');
 const outputDir = join(__dirname, '../public/icons');
 
 // Create output directory if it doesn't exist
