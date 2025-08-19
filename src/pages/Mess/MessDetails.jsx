@@ -9,7 +9,10 @@ import Toast from "../../components/Toast";
 import Loader from "../../components/Loader";
 import { QRCodeSVG } from "qrcode.react";
 import { useSocket } from "../../hooks/useSocket";
-import { MessDaySkeleton, MessProfileSkeleton } from "../../components/SkeletonLoader";
+import {
+  MessDaySkeleton,
+  MessProfileSkeleton,
+} from "../../components/SkeletonLoader";
 
 const MessDetails = () => {
   const [messMenuData, setMessMenuData] = useState({
@@ -71,12 +74,12 @@ const MessDetails = () => {
         setLoading(false);
       }
     };
-    
+
     loadData();
   }, [user, outletId, customerAuthId]);
 
   useEffect(() => {
-    if(messDetails?.isWhitelisted === false){
+    if (messDetails?.isWhitelisted === false) {
       navigate("/outlet/" + outletId);
     }
   }, [messDetails]);
@@ -106,7 +109,9 @@ const MessDetails = () => {
       // console.log(response);
 
       if (response.data.success) {
-        setMessDetails(response.data.data.find(item => item.outletid == outletId));
+        setMessDetails(
+          response.data.data.find((item) => item.outletid == outletId)
+        );
       }
     } catch (error) {
       console.error("Error fetching restaurants:", error);
@@ -208,23 +213,22 @@ const MessDetails = () => {
     }
 
     // Check if any meal deadline has passed for today but not served yet
-    const passedDeadlineMeal = meals.find(
-      (meal) => {
-        if (!meal.rsvpDeadline) return false;
-        
-        const deadline = new Date(meal.rsvpDeadline);
-        const deadlineHours = deadline.getHours();
-        const deadlineMinutes = deadline.getMinutes();
-        
-        // Compare time only
-        const deadlinePassed = 
-          (now.getHours() > deadlineHours) || 
-          (now.getHours() === deadlineHours && now.getMinutes() > deadlineMinutes);
-          
-        return nowMinutes < meal.startMinutes && deadlinePassed && !meal.isChoice;
-      }
-    );
-    
+    const passedDeadlineMeal = meals.find((meal) => {
+      if (!meal.rsvpDeadline) return false;
+
+      const deadline = new Date(meal.rsvpDeadline);
+      const deadlineHours = deadline.getHours();
+      const deadlineMinutes = deadline.getMinutes();
+
+      // Compare time only
+      const deadlinePassed =
+        now.getHours() > deadlineHours ||
+        (now.getHours() === deadlineHours &&
+          now.getMinutes() > deadlineMinutes);
+
+      return nowMinutes < meal.startMinutes && deadlinePassed && !meal.isChoice;
+    });
+
     if (passedDeadlineMeal) {
       setDisabled(true);
       setStatusMessage(
@@ -247,12 +251,10 @@ const MessDetails = () => {
       const anyCurrentOrUpcomingMeal = meals.find(
         (meal) => nowMinutes < meal.endMinutes
       );
-      
+
       if (anyCurrentOrUpcomingMeal) {
         setDisabled(true);
-        setStatusMessage(
-          `No opted meals available at this time.`
-        );
+        setStatusMessage(`No opted meals available at this time.`);
       } else {
         setDisabled(false);
         setStatusMessage(null);
@@ -360,7 +362,11 @@ const MessDetails = () => {
     return (
       <div className="flex items-center justify-end space-x-3">
         <button
-          onClick={() => handleRsvp(meal, true, isTomorrow)}
+          onClick={() => {
+            if (!userSelectedYes) {
+              handleRsvp(meal, true, isTomorrow);
+            }
+          }}
           disabled={
             isPastDeadline
               ? true // Not changeable after deadline
@@ -377,7 +383,11 @@ const MessDetails = () => {
           Yes
         </button>
         <button
-          onClick={() => handleRsvp(meal, false, isTomorrow)}
+          onClick={() => {
+            if(!userSelectedNo){
+              handleRsvp(meal, false, isTomorrow)
+            }
+          }}
           disabled={
             isPastDeadline
               ? true // Not changeable after deadline
@@ -410,21 +420,22 @@ const MessDetails = () => {
       Toast.error(`You have not opted for ${meal.mealTypeId}`);
       return;
     }
-    
+
     // Check if the deadline has passed for today's meal
     const now = new Date();
     if (!meal.isTomorrow && meal.rsvpDeadline) {
       const deadline = new Date(meal.rsvpDeadline);
-      const isPastDeadline = 
-        (now.getHours() > deadline.getHours()) || 
-        (now.getHours() === deadline.getHours() && now.getMinutes() > deadline.getMinutes());
-        
+      const isPastDeadline =
+        now.getHours() > deadline.getHours() ||
+        (now.getHours() === deadline.getHours() &&
+          now.getMinutes() > deadline.getMinutes());
+
       if (isPastDeadline) {
         Toast.error("RSVP deadline has passed for this meal");
         return;
       }
     }
-    
+
     setSelectedMeal(meal);
     setShowQRCode(true);
   };
@@ -447,7 +458,9 @@ const MessDetails = () => {
           <h3 className="text-md font-semibold text-gray-800 mb-1.5">
             {meal.mealTypeId}
           </h3>
-          <p className="text-sm text-gray-600 mb-1 break-words whitespace-pre-line">{meal.menuDescription}</p>
+          <p className="text-sm text-gray-600 mb-1 break-words whitespace-pre-line">
+            {meal.menuDescription}
+          </p>
           <p className="text-xs text-gray-500 mb-3">RSVP by: {rsvpDeadline}</p>
 
           {isPastDeadline && (
@@ -510,7 +523,7 @@ const MessDetails = () => {
     } else {
       disconnectSocket();
     }
-    
+
     return () => {
       disconnectSocket();
     };
@@ -522,9 +535,9 @@ const MessDetails = () => {
       try {
         if (
           qrCodeData?.success === true &&
-          qrCodeData?.message === 'Meal Served Successfully'
+          qrCodeData?.message === "Meal Served Successfully"
         ) {
-          Toast.success('Meal served successfully.');
+          Toast.success("Meal served successfully.");
           // Add vibration if browser supports it
           if (navigator.vibrate) {
             navigator.vibrate(200);
@@ -532,16 +545,16 @@ const MessDetails = () => {
           setShowQRCode(false);
         } else if (
           qrCodeData?.success === false &&
-          qrCodeData?.message === 'Meal already served'
+          qrCodeData?.message === "Meal already served"
         ) {
-          Toast.warning('Meal already served.');
+          Toast.warning("Meal already served.");
           if (navigator.vibrate) {
             navigator.vibrate([100, 50, 100]);
           }
           setShowQRCode(false);
         }
       } catch (error) {
-        console.error('Error handling QR code data:', error);
+        console.error("Error handling QR code data:", error);
       }
     }
   }, [qrCodeData]);
@@ -588,13 +601,15 @@ const MessDetails = () => {
                   const currentMeall = [
                     ...(messMenuData.today || []),
                     ...(messMenuData.tomorrow || []),
-                  ].find((meal) => meal.isCurrent === true && meal.isChoice === true);
-                  
+                  ].find(
+                    (meal) => meal.isCurrent === true && meal.isChoice === true
+                  );
+
                   if (!currentMeall) {
                     Toast.error("You have not opted for any current meal");
                     return;
                   }
-                  
+
                   setSelectedMeal(currentMeall);
                   setShowQRCode(true);
                 }}
@@ -664,13 +679,16 @@ const MessDetails = () => {
                         fgColor="#000000"
                       />
                     </div>
-                    <p className="text-gray-600 text-xs mt-3 text-center">Scan to access your meal</p>
+                    <p className="text-gray-600 text-xs mt-3 text-center">
+                      Scan to access your meal
+                    </p>
                   </>
                 ) : (
                   <div className="text-center py-4">
                     <p className="text-red-500 font-medium mb-2">Not Opted</p>
                     <p className="text-gray-600 text-sm">
-                      You have not opted for {selectedMeal.mealTypeId}. Please contact mess admin in case of an exception.
+                      You have not opted for {selectedMeal.mealTypeId}. Please
+                      contact mess admin in case of an exception.
                     </p>
                   </div>
                 )
