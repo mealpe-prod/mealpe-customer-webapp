@@ -259,7 +259,7 @@ const Layout = ({ children }) => {
           </div>
         </main>
 
-        {showNav && !isDesktop && location.pathname !== "/cart" && location.pathname !== "/payment-success" && location.pathname !== "/payment-failed" && location.pathname !== "/allow-location" && location.pathname !== "/orders/review" && !document.body.classList.contains('hide-footer-nav') && (
+        {showNav && !isDesktop && location.pathname !== "/cart" && location.pathname !== "/payment-success" && location.pathname !== "/payment-failed" && location.pathname !== "/allow-location" && location.pathname !== "/orders/review" && location.pathname !== "/device-time" && !document.body.classList.contains('hide-footer-nav') && (
           <div className="fixed bottom-0 left-0 right-0 flex justify-center z-30">
             <nav className="w-full max-w-[500px] bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.1)]">
               <div className="px-3 py-2">

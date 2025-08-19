@@ -31,6 +31,7 @@ import PaymentFailed from '../pages/PaymentFailed';
 import AllowLocation from '../pages/Location/AllowLocation';
 import OrderReview from '../pages/OrderHistory/OrderReview';
 import Address from '../pages/Settings/Address';
+import ResetDeviceTime from '../pages/Mess/ResetDeviceTime';
 
 const AppRouter = () => {
   const { user, loading } = useSelector(state => state.auth);
@@ -76,6 +77,7 @@ const AppRouter = () => {
           <Route path="/mess/:outletId" element={<MessDetails />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/payment-failed" element={<PaymentFailed />} />
+          <Route path="/device-time" element={<ResetDeviceTime />} />
         </Route>
         
         <Route path="*" element={<NotFound />} />

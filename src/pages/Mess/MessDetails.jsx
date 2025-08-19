@@ -13,6 +13,7 @@ import {
   MessDaySkeleton,
   MessProfileSkeleton,
 } from "../../components/SkeletonLoader";
+import ResetDeviceTime from "./ResetDeviceTime";
 
 const MessDetails = () => {
   const [messMenuData, setMessMenuData] = useState({
@@ -362,9 +363,44 @@ const MessDetails = () => {
     return (
       <div className="flex items-center justify-end space-x-3">
         <button
-          onClick={() => {
+          onClick={async () => {
             if (!userSelectedYes) {
-              handleRsvp(meal, true, isTomorrow);
+              try {
+                // Fetch server time
+                const serverTimeRes = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}getTime`);
+                if (!serverTimeRes?.data) {
+                  console.error("Unable to verify device time. Please try again.");
+                  return;
+                }
+                // Extract server time
+                const { year, month, day, hour, minute } = serverTimeRes.data;
+                const serverDate = new Date(year, month - 1, day, hour, minute);
+
+                // Get device time
+                const deviceDate = new Date();
+                // Compare year, month, day, hour, minute
+                const isTimeMatch =
+                  serverDate.getFullYear() === deviceDate.getFullYear() &&
+                  serverDate.getMonth() === deviceDate.getMonth() &&
+                  serverDate.getDate() === deviceDate.getDate() &&
+                  serverDate.getHours() === deviceDate.getHours() &&
+                  serverDate.getMinutes() === deviceDate.getMinutes();
+
+                // Allow a 2-minute difference for minor clock drift
+                const diffMs = Math.abs(serverDate.getTime() - deviceDate.getTime());
+                const diffMinutes = diffMs / (1000 * 60);
+
+                if (!isTimeMatch && diffMinutes > 2) {
+                  // Device time mismatch, navigate to reset screen
+                  navigate("/device-time");
+                  return;
+                }
+
+                // If time matches, proceed
+                handleRsvp(meal, true, isTomorrow);
+              } catch (error) {
+                console.error("Error verifying device time:", error);
+              }
             }
           }}
           disabled={
@@ -383,9 +419,44 @@ const MessDetails = () => {
           Yes
         </button>
         <button
-          onClick={() => {
-            if(!userSelectedNo){
-              handleRsvp(meal, false, isTomorrow)
+          onClick={async () => {
+            if (!userSelectedNo) {
+              try {
+                // Fetch server time
+                const serverTimeRes = await axios.get(`${import.meta.env.VITE_APP_BACKEND_BASE_URL}getTime`);
+                if (!serverTimeRes?.data) {
+                  console.error("Unable to verify device time. Please try again.");
+                  return;
+                }
+                // Extract server time
+                const { year, month, day, hour, minute } = serverTimeRes.data;
+                const serverDate = new Date(year, month - 1, day, hour, minute);
+
+                // Get device time
+                const deviceDate = new Date();
+                // Compare year, month, day, hour, minute
+                const isTimeMatch =
+                  serverDate.getFullYear() === deviceDate.getFullYear() &&
+                  serverDate.getMonth() === deviceDate.getMonth() &&
+                  serverDate.getDate() === deviceDate.getDate() &&
+                  serverDate.getHours() === deviceDate.getHours() &&
+                  serverDate.getMinutes() === deviceDate.getMinutes();
+
+                // Allow a 2-minute difference for minor clock drift
+                const diffMs = Math.abs(serverDate.getTime() - deviceDate.getTime());
+                const diffMinutes = diffMs / (1000 * 60);
+
+                if (!isTimeMatch && diffMinutes > 2) {
+                  // Device time mismatch, navigate to reset screen
+                  navigate("/device-time");
+                  return;
+                }
+
+                // If time matches, proceed
+                handleRsvp(meal, false, isTomorrow);
+              } catch (error) {
+                console.error("Error verifying device time:", error);
+              }
             }
           }}
           disabled={
